@@ -1,72 +1,59 @@
 [
   {
-    "id": "card_001",
-    "image_url": "https://picsum.photos/id/1015/1920/1080",
-    "image_filename": "test-h1.jpg",
-    "group": "公共區域宣傳橫式",
-    "size": "1920x1080",
+    "id": "card_demo_001",
+    "title": "四月衛教-糖尿病預防",
+    "tags": ["衛教"],
+    "channels": [],
+    "variants": {
+      "1920x1080": "https://picsum.photos/id/1015/1920/1080",
+      "1080x1920": "https://picsum.photos/id/1015/1080/1920",
+      "800x1080": "https://picsum.photos/id/1015/800/1080",
+      "1080x1162": "https://picsum.photos/id/1015/1080/1162"
+    },
     "start_date": "2026/01/01",
     "end_date": "2026/12/31",
     "start_time": "00:00",
     "end_time": "23:59",
-    "sort_order": 1,
-    "enabled": "TRUE",
-    "note": "橫式測試圖卡 1"
+    "sort_order": 10,
+    "priority": "normal",
+    "enabled": true,
+    "note": "測試用衛教圖卡"
   },
   {
-    "id": "card_002",
-    "image_url": "https://picsum.photos/id/1025/1920/1080",
-    "image_filename": "test-h2.jpg",
-    "group": "公共區域宣傳橫式",
-    "size": "1920x1080",
+    "id": "card_demo_002",
+    "title": "新進醫師-王大明",
+    "tags": ["新進醫師"],
+    "channels": [],
+    "variants": {
+      "1920x1080": "https://picsum.photos/id/1025/1920/1080",
+      "1080x1920": "https://picsum.photos/id/1025/1080/1920",
+      "800x1080": "https://picsum.photos/id/1025/800/1080",
+      "1080x1162": "https://picsum.photos/id/1025/1080/1162"
+    },
     "start_date": "2026/01/01",
     "end_date": "2026/12/31",
     "start_time": "00:00",
     "end_time": "23:59",
-    "sort_order": 2,
-    "enabled": "TRUE",
-    "note": "橫式測試圖卡 2"
+    "sort_order": 20,
+    "priority": "normal",
+    "enabled": true,
+    "note": "測試用新進醫師圖卡"
   },
   {
-    "id": "card_003",
-    "image_url": "https://picsum.photos/id/1035/1920/1080",
-    "image_filename": "test-h3.jpg",
-    "group": "公共區域宣傳橫式",
-    "size": "1920x1080",
-    "start_date": "2026/01/01",
-    "end_date": "2026/12/31",
-    "start_time": "00:00",
-    "end_time": "23:59",
-    "sort_order": 3,
-    "enabled": "TRUE",
-    "note": "橫式測試圖卡 3"
-  },
-  {
-    "id": "card_004",
-    "image_url": "https://picsum.photos/id/1040/1080/1920",
-    "image_filename": "test-v1.jpg",
-    "group": "公共區域直式",
-    "size": "1080x1920",
-    "start_date": "2026/01/01",
-    "end_date": "2026/12/31",
-    "start_time": "00:00",
-    "end_time": "23:59",
-    "sort_order": 1,
-    "enabled": "TRUE",
-    "note": "直式測試圖卡"
-  },
-  {
-    "id": "card_005",
-    "image_url": "https://picsum.photos/id/1043/800/1080",
-    "image_filename": "test-r1.jpg",
-    "group": "門診大內科全區",
-    "size": "800x1080",
-    "start_date": "2026/01/01",
-    "end_date": "2026/12/31",
-    "start_time": "00:00",
-    "end_time": "23:59",
-    "sort_order": 1,
-    "enabled": "TRUE",
-    "note": "右半版測試圖卡"
+    "id": "card_demo_003",
+    "title": "歡迎OO學會蒞臨指導",
+    "tags": ["歡迎"],
+    "channels": ["ch_conference_L", "ch_conference_R", "ch_hall"],
+    "variants": {
+      "1920x1080": "https://picsum.photos/id/1035/1920/1080"
+    },
+    "start_date": "2026/04/15",
+    "end_date": "2026/04/15",
+    "start_time": "07:00",
+    "end_time": "17:00",
+    "sort_order": 0,
+    "priority": "urgent",
+    "enabled": true,
+    "note": "插播-只播會議廳和大廳"
   }
 ]

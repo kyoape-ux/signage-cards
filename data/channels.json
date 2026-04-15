@@ -1,0 +1,83 @@
+[
+  {
+    "id": "ch_conference_L",
+    "name": "國際會議廳梯廳-左",
+    "location": "國際會議廳梯廳",
+    "size": "1920x1080",
+    "interval": 8,
+    "tags": ["歡迎", "會議"],
+    "enabled": true
+  },
+  {
+    "id": "ch_conference_R",
+    "name": "國際會議廳梯廳-右",
+    "location": "國際會議廳梯廳",
+    "size": "1920x1080",
+    "interval": 8,
+    "tags": ["活動", "會議"],
+    "enabled": true
+  },
+  {
+    "id": "ch_hall",
+    "name": "大廳公共區域",
+    "location": "大廳",
+    "size": "1920x1080",
+    "interval": 8,
+    "tags": ["醫療行銷", "自費推廣", "衛教", "新進醫師", "活動", "歡迎"],
+    "enabled": true
+  },
+  {
+    "id": "ch_elevator",
+    "name": "電梯梯廳",
+    "location": "電梯梯廳",
+    "size": "1080x1920",
+    "interval": 8,
+    "tags": ["醫療行銷", "自費推廣", "衛教", "新進醫師", "活動", "歡迎"],
+    "enabled": true
+  },
+  {
+    "id": "ch_clinic_med",
+    "name": "診間候診區-大內科",
+    "location": "診間候診區",
+    "size": "800x1080",
+    "interval": 10,
+    "tags": ["醫療行銷", "自費推廣", "衛教", "新進醫師", "活動"],
+    "enabled": true
+  },
+  {
+    "id": "ch_clinic_surg",
+    "name": "診間候診區-大外科",
+    "location": "診間候診區",
+    "size": "800x1080",
+    "interval": 10,
+    "tags": ["醫療行銷", "自費推廣", "衛教", "新進醫師", "活動"],
+    "enabled": true
+  },
+  {
+    "id": "ch_clinic_obgyn",
+    "name": "診間候診區-婦女整合",
+    "location": "診間候診區",
+    "size": "800x1080",
+    "interval": 10,
+    "tags": ["醫療行銷", "自費推廣", "衛教", "新進醫師", "活動"],
+    "enabled": true
+  },
+  {
+    "id": "ch_foodcourt",
+    "name": "美食街",
+    "location": "美食街",
+    "size": "1080x1162",
+    "interval": 8,
+    "tags": ["醫療行銷", "自費推廣", "衛教", "新進醫師", "活動"],
+    "enabled": true
+  },
+  {
+    "id": "ch_dajia",
+    "name": "大甲海報機",
+    "location": "大甲院區",
+    "size": "1080x1162",
+    "interval": 8,
+    "tags": ["醫療行銷", "自費推廣", "衛教", "新進醫師", "活動", "歡迎"],
+    "enabled": true
+  }
+]

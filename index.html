@@ -8,109 +8,98 @@
 </head>
 <body>
 
-<!-- ============================================================
-     頂部導航
-     ============================================================ -->
+<!-- 頂部導航 -->
 <header class="top-bar">
   <div class="logo">
     <div class="logo-icon">📺</div>
-    <div class="logo-text">
-      公播圖卡管理
-      <small>光田綜合醫院</small>
-    </div>
+    <div class="logo-text">公播圖卡管理<small>光田綜合醫院</small></div>
   </div>
   <div class="top-bar-actions">
-    <button class="btn btn-secondary btn-sm" onclick="openPreview()">👁 預覽</button>
+    <button class="btn btn-secondary btn-sm tab-btn active" data-tab="cards" onclick="switchTab('cards')">🖼 圖卡</button>
+    <button class="btn btn-secondary btn-sm tab-btn" data-tab="channels" onclick="switchTab('channels')">📺 頻道</button>
     <button class="btn btn-secondary btn-sm" onclick="toggleSettings()">⚙ 設定</button>
   </div>
 </header>
 
-<!-- ============================================================
-     儀表板
-     ============================================================ -->
-<section class="dashboard" id="dashboard">
-  <div class="stat-card active" onclick="filterByStatus('active')">
-    <div class="stat-number" id="count-active">0</div>
-    <div class="stat-label">🟢 播放中</div>
-  </div>
-  <div class="stat-card expiring" onclick="filterByStatus('expiring')">
-    <div class="stat-number" id="count-expiring">0</div>
-    <div class="stat-label">🟡 即將到期</div>
-  </div>
-  <div class="stat-card expired" onclick="filterByStatus('expired')">
-    <div class="stat-number" id="count-expired">0</div>
-    <div class="stat-label">🔴 已過期</div>
-  </div>
-  <div class="stat-card disabled" onclick="filterByStatus('disabled')">
-    <div class="stat-number" id="count-disabled">0</div>
-    <div class="stat-label">⚫ 已停用</div>
-  </div>
-</section>
+<!-- ========== 圖卡管理頁 ========== -->
+<div id="tab-cards">
 
-<!-- ============================================================
-     工具列
-     ============================================================ -->
-<section class="toolbar" id="toolbar">
-  <select id="filter-group" onchange="applyFilters()">
-    <option value="">全部群組</option>
-  </select>
-  <select id="filter-size" onchange="applyFilters()">
-    <option value="">全部尺寸</option>
-    <option value="1920x1080">1920×1080 橫式</option>
-    <option value="1080x1920">1080×1920 直式</option>
-    <option value="800x1080">800×1080 右半版</option>
-  </select>
-  <select id="filter-status" onchange="applyFilters()">
-    <option value="">全部狀態</option>
-    <option value="active">播放中</option>
-    <option value="expiring">即將到期</option>
-    <option value="expired">已過期</option>
-    <option value="disabled">已停用</option>
-  </select>
-  <div class="spacer"></div>
-  <button class="btn btn-secondary btn-sm" id="btn-batch" style="display:none" onclick="showBatchMenu()">
-    📋 批次操作
-  </button>
-  <button class="btn btn-primary" onclick="openAddModal()">＋ 新增圖卡</button>
-</section>
+  <!-- 儀表板 -->
+  <section class="dashboard" id="dashboard">
+    <div class="stat-card active" onclick="filterByStatus('active')">
+      <div class="stat-number" id="count-active">0</div>
+      <div class="stat-label">🟢 播放中</div>
+    </div>
+    <div class="stat-card expiring" onclick="filterByStatus('expiring')">
+      <div class="stat-number" id="count-expiring">0</div>
+      <div class="stat-label">🟡 即將到期</div>
+    </div>
+    <div class="stat-card expired" onclick="filterByStatus('expired')">
+      <div class="stat-number" id="count-expired">0</div>
+      <div class="stat-label">🔴 已過期</div>
+    </div>
+    <div class="stat-card disabled" onclick="filterByStatus('disabled')">
+      <div class="stat-number" id="count-disabled">0</div>
+      <div class="stat-label">⚫ 已停用</div>
+    </div>
+  </section>
 
-<!-- ============================================================
-     圖卡列表
-     ============================================================ -->
-<section class="card-list" id="card-list">
-  <div class="empty-state" id="empty-state">
-    <div class="empty-icon">📭</div>
-    <p>尚無圖卡，點擊右上角「＋ 新增圖卡」開始</p>
-  </div>
-</section>
+  <!-- 工具列 -->
+  <section class="toolbar" id="toolbar">
+    <select id="filter-tag" onchange="applyFilters()">
+      <option value="">全部標籤</option>
+    </select>
+    <select id="filter-channel" onchange="applyFilters()">
+      <option value="">全部頻道</option>
+    </select>
+    <select id="filter-status" onchange="applyFilters()">
+      <option value="">全部狀態</option>
+      <option value="active">播放中</option>
+      <option value="expiring">即將到期</option>
+      <option value="expired">已過期</option>
+      <option value="disabled">已停用</option>
+    </select>
+    <div class="spacer"></div>
+    <button class="btn btn-secondary btn-sm" id="btn-batch" style="display:none" onclick="showBatchMenu()">📋 批次操作</button>
+    <button class="btn btn-primary btn-sm" style="background:#ff9800" onclick="openQuickInsert()">⚡ 快速插播</button>
+    <button class="btn btn-primary" onclick="openAddModal()">＋ 新增圖卡</button>
+  </section>
 
-<!-- ============================================================
-     設定面板
-     ============================================================ -->
+  <!-- 圖卡列表 -->
+  <section class="card-list" id="card-list">
+    <div class="empty-state" id="empty-state">
+      <div class="empty-icon">📭</div>
+      <p>尚無圖卡，點擊「＋ 新增圖卡」開始</p>
+    </div>
+  </section>
+</div>
+
+<!-- ========== 頻道管理頁 ========== -->
+<div id="tab-channels" style="display:none">
+  <section class="toolbar">
+    <div class="spacer"></div>
+    <button class="btn btn-primary" onclick="openAddChannel()">＋ 新增頻道</button>
+  </section>
+  <section class="card-list" id="channel-list"></section>
+</div>
+
+<!-- ========== 設定面板 ========== -->
 <section class="settings-panel" id="settings-panel">
   <div class="settings-section">
-    <h3>📊 Google Sheets 設定</h3>
-    <div class="form-group">
-      <label>Google Sheets ID</label>
-      <input type="text" id="cfg-sheet-id" placeholder="試算表 ID">
-    </div>
-    <div class="form-group">
-      <label>Apps Script Web App URL</label>
-      <input type="text" id="cfg-apps-script-url" placeholder="https://script.google.com/macros/s/.../exec">
-    </div>
-  </div>
-  <div class="settings-section">
-    <h3>📁 GitHub 圖片上傳設定</h3>
-    <div class="form-group">
-      <label>GitHub Owner / Repo</label>
-      <div class="form-row">
-        <input type="text" id="cfg-gh-owner" placeholder="帳號名稱">
-        <input type="text" id="cfg-gh-repo" placeholder="repo 名稱">
+    <h3>📁 GitHub 設定</h3>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Owner</label>
+        <input type="text" id="cfg-gh-owner" placeholder="帳號">
+      </div>
+      <div class="form-group">
+        <label>Repo</label>
+        <input type="text" id="cfg-gh-repo" placeholder="repo">
       </div>
     </div>
     <div class="form-group">
-      <label>GitHub Personal Access Token</label>
-      <input type="password" id="cfg-gh-token" placeholder="ghp_xxxx（只存在本機）">
+      <label>Personal Access Token</label>
+      <input type="password" id="cfg-gh-token" placeholder="ghp_xxxx">
     </div>
   </div>
   <div class="settings-section">
@@ -126,12 +115,17 @@
       </div>
     </div>
   </div>
+  <div class="settings-section">
+    <h3>🏷 常用標籤管理</h3>
+    <div class="form-group">
+      <label>每行一個標籤（可自由新增）</label>
+      <textarea id="cfg-tags" rows="8" style="font-size:13px;line-height:1.8"></textarea>
+    </div>
+  </div>
   <button class="btn btn-primary" onclick="saveSettings()">💾 儲存設定</button>
 </section>
 
-<!-- ============================================================
-     新增/編輯 Modal
-     ============================================================ -->
+<!-- ========== 新增/編輯圖卡 Modal ========== -->
 <div class="modal-overlay" id="card-modal">
   <div class="modal">
     <div class="modal-header">
@@ -139,43 +133,34 @@
       <button class="modal-close" onclick="closeModal()">&times;</button>
     </div>
     <div class="modal-body">
-      <!-- 圖片上傳 -->
       <div class="form-group">
-        <label>圖片</label>
-        <div class="upload-area" id="upload-area">
-          <div class="upload-icon">🖼</div>
-          <div class="upload-text">拖曳圖片到此處，或<strong>點擊選擇</strong></div>
-        </div>
-        <div class="upload-preview" id="upload-preview">
-          <img id="preview-img" src="" alt="預覽">
-          <button class="remove-img" onclick="removeImage()">&times;</button>
-        </div>
-        <input type="file" id="file-input" accept="image/*" style="display:none">
+        <label>標題</label>
+        <input type="text" id="card-title" placeholder="例如：四月衛教-糖尿病預防">
       </div>
 
-      <!-- 群組 + 尺寸 -->
-      <div class="form-row">
-        <div class="form-group">
-          <label>群組</label>
-          <select id="card-group">
-            <option value="公共區域直式">公共區域直式</option>
-            <option value="公共區域宣傳橫式">公共區域宣傳橫式</option>
-            <option value="門診大內科全區">門診大內科全區</option>
-            <option value="門診大外科全區">門診大外科全區</option>
-            <option value="婦女整合門診">婦女整合門診</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>尺寸</label>
-          <select id="card-size">
-            <option value="1920x1080">1920×1080 橫式</option>
-            <option value="1080x1920">1080×1920 直式</option>
-            <option value="800x1080">800×1080 右半版</option>
-          </select>
+      <!-- 標籤選擇 -->
+      <div class="form-group">
+        <label>標籤（決定播放在哪些頻道）</label>
+        <div id="tag-checkboxes" class="tag-grid"></div>
+        <div style="margin-top:8px;display:flex;gap:8px">
+          <input type="text" id="new-tag-input" placeholder="自訂標籤..." style="flex:1;padding:6px 10px;background:var(--bg-input);border:1px solid var(--border-color);border-radius:6px;color:var(--text-primary);font-size:12px">
+          <button class="btn btn-secondary btn-sm" onclick="addCustomTag()">＋</button>
         </div>
       </div>
 
-      <!-- 日期 -->
+      <!-- 指定頻道（可選） -->
+      <div class="form-group">
+        <label>指定頻道 <span style="color:var(--text-muted);font-weight:300">（可選，勾選後只播這些螢幕，不走標籤）</span></label>
+        <div id="channel-checkboxes" class="tag-grid"></div>
+      </div>
+
+      <!-- 多尺寸圖片上傳 -->
+      <div class="form-group">
+        <label>圖片（按需上傳各尺寸，沒上傳的尺寸該頻道不播）</label>
+        <div id="variant-uploads"></div>
+      </div>
+
+      <!-- 日期排程 -->
       <div class="form-row">
         <div class="form-group">
           <label>上架日期</label>
@@ -186,8 +171,6 @@
           <input type="date" id="card-end-date">
         </div>
       </div>
-
-      <!-- 時段 -->
       <div class="form-row">
         <div class="form-group">
           <label>每日開始時間</label>
@@ -198,23 +181,19 @@
           <input type="time" id="card-end-time" value="23:59">
         </div>
       </div>
-
-      <!-- 排序 -->
       <div class="form-row">
         <div class="form-group">
-          <label>排序（數字越小越前面）</label>
-          <input type="number" id="card-sort" value="1" min="0">
+          <label>排序（數字越小越前）</label>
+          <input type="number" id="card-sort" value="10" min="0">
         </div>
         <div class="form-group">
-          <label>狀態</label>
-          <select id="card-enabled">
-            <option value="TRUE">啟用</option>
-            <option value="FALSE">停用</option>
+          <label>優先權</label>
+          <select id="card-priority">
+            <option value="normal">一般</option>
+            <option value="urgent">插播（優先顯示）</option>
           </select>
         </div>
       </div>
-
-      <!-- 備註 -->
       <div class="form-group">
         <label>備註</label>
         <textarea id="card-note" rows="2" placeholder="選填"></textarea>
@@ -222,14 +201,61 @@
     </div>
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closeModal()">取消</button>
-      <button class="btn btn-primary" id="btn-save-card" onclick="saveCard()">💾 儲存</button>
+      <button class="btn btn-primary" onclick="saveCard()">💾 儲存</button>
     </div>
   </div>
 </div>
 
-<!-- ============================================================
-     批次延期 Modal
-     ============================================================ -->
+<!-- ========== 頻道編輯 Modal ========== -->
+<div class="modal-overlay" id="channel-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="ch-modal-title">編輯頻道</h2>
+      <button class="modal-close" onclick="closeChannelModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>名稱</label>
+          <input type="text" id="ch-name" placeholder="例：大廳公共區域">
+        </div>
+        <div class="form-group">
+          <label>位置</label>
+          <input type="text" id="ch-location" placeholder="例：大廳">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>尺寸</label>
+          <select id="ch-size">
+            <option value="1920x1080">1920×1080 橫式</option>
+            <option value="1080x1920">1080×1920 直式</option>
+            <option value="800x1080">800×1080 右半版</option>
+            <option value="1080x1162">1080×1162 海報</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>輪播秒數</label>
+          <input type="number" id="ch-interval" value="8" min="3">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>訂閱標籤（勾選後，有該標籤的圖卡會自動播放在此頻道）</label>
+        <div id="ch-tag-checkboxes" class="tag-grid"></div>
+      </div>
+      <div class="form-group">
+        <label>播放器 URL</label>
+        <input type="text" id="ch-player-url" readonly style="color:var(--kt-green-light);cursor:pointer" onclick="this.select();document.execCommand('copy');toast('已複製 URL','success')">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeChannelModal()">取消</button>
+      <button class="btn btn-primary" onclick="saveChannel()">💾 儲存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 批次 Modal -->
 <div class="modal-overlay" id="batch-modal">
   <div class="modal" style="max-width:400px">
     <div class="modal-header">
@@ -237,11 +263,8 @@
       <button class="modal-close" onclick="closeBatchModal()">&times;</button>
     </div>
     <div class="modal-body">
-      <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">
-        已選取 <strong id="batch-count">0</strong> 張圖卡
-      </p>
+      <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">已選取 <strong id="batch-count">0</strong> 張圖卡</p>
       <div class="form-group">
-        <label>操作</label>
         <select id="batch-action">
           <option value="enable">批次啟用</option>
           <option value="disable">批次停用</option>
@@ -261,15 +284,33 @@
   </div>
 </div>
 
-<!-- Loading -->
-<div class="loading-overlay" id="loading">
-  <div class="loading-spinner"></div>
-</div>
-
-<!-- Toast -->
+<div class="loading-overlay" id="loading"><div class="loading-spinner"></div></div>
 <div class="toast-container" id="toast-container"></div>
-
 <input type="hidden" id="editing-card-id" value="">
+<input type="hidden" id="editing-channel-id" value="">
+
+<style>
+  .tag-grid { display:flex; flex-wrap:wrap; gap:6px; }
+  .tag-chip { display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:16px;
+    background:var(--bg-input); border:1px solid var(--border-color); font-size:12px; cursor:pointer; transition:all .2s; }
+  .tag-chip:hover { border-color:var(--kt-green); }
+  .tag-chip.selected { background:var(--kt-green); border-color:var(--kt-green); color:#fff; }
+  .tag-chip input { display:none; }
+  .tab-btn.active { background:var(--kt-green) !important; color:#fff !important; border-color:var(--kt-green) !important; }
+  .variant-row { display:flex; align-items:center; gap:10px; padding:8px 12px; background:var(--bg-input);
+    border-radius:var(--radius); margin-bottom:6px; }
+  .variant-row .size-label { font-size:12px; font-weight:500; min-width:100px; }
+  .variant-row .variant-preview { width:60px; height:40px; object-fit:contain; border-radius:4px; background:#111; }
+  .variant-row .variant-status { font-size:11px; color:var(--text-muted); flex:1; }
+  .variant-row .btn { flex-shrink:0; }
+  .channel-card { background:var(--bg-card); border-radius:var(--radius); padding:16px; border:1px solid var(--border-color); }
+  .channel-card .ch-name { font-size:15px; font-weight:500; margin-bottom:6px; }
+  .channel-card .ch-meta { font-size:12px; color:var(--text-secondary); display:flex; flex-direction:column; gap:3px; }
+  .channel-card .ch-tags { display:flex; flex-wrap:wrap; gap:4px; margin-top:8px; }
+  .channel-card .ch-tag { font-size:10px; padding:2px 8px; border-radius:10px; background:rgba(15,110,86,0.2); color:var(--kt-green-light); }
+  .channel-card .ch-url { font-size:11px; color:var(--kt-green-light); margin-top:8px; word-break:break-all; cursor:pointer; }
+  .channel-card .ch-actions { margin-top:10px; display:flex; gap:6px; }
+</style>
 
 <script src="js/admin.js"></script>
 </body>

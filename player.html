@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>光田公播播放器</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/player.css">
+  <style>
+    /* 尺寸由 JS 動態設定 */
+    html, body, #player-container {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+<div id="player-container" class="transition-fade">
+  <div id="slide-a" class="slide"><img id="img-a" src="" alt=""></div>
+  <div id="slide-b" class="slide"><img id="img-b" src="" alt=""></div>
+  <div id="default-screen">
+    <div class="logo-wrap">
+      <img src="assets/kt-logo.png" alt="光田綜合醫院" onerror="this.style.display='none'">
+    </div>
+    <div class="brand-text">光田綜合醫院</div>
+  </div>
+  <div id="loading-indicator"><div class="spinner"></div></div>
+  <div id="debug-info"></div>
+</div>
+<script src="js/player.js"></script>
+</body>
+</html>
