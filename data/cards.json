@@ -65,27 +65,5 @@
     "priority": "urgent",
     "enabled": true,
     "note": "插播-只播會議廳和大廳"
-  },
-  {
-    "id": "card_1776266185670",
-    "title": "新進醫師-王大明 (副本)",
-    "tags": [
-      "新進醫師"
-    ],
-    "channels": [],
-    "variants": {
-      "1920x1080": "https://picsum.photos/id/1025/1920/1080",
-      "1080x1920": "https://picsum.photos/id/1025/1080/1920",
-      "800x1080": "https://picsum.photos/id/1025/800/1080",
-      "1080x1162": "https://picsum.photos/id/1025/1080/1162"
-    },
-    "start_date": "2026/01/01",
-    "end_date": "2026/12/31",
-    "start_time": "00:00",
-    "end_time": "23:59",
-    "sort_order": 20,
-    "priority": "normal",
-    "enabled": true,
-    "note": "測試用新進醫師圖卡"
   }
 ]
