@@ -1216,6 +1216,354 @@
   }
 
   // ============================================================
+  // 批次上傳
+  // ============================================================
+  var bulkItems = []; // [{ id, file, dataUrl, title, detectedSize, width, height }]
+
+  function openBulkUpload() {
+    bulkItems = [];
+    renderBulkList();
+    document.getElementById('bulk-shared-settings').style.display = 'none';
+    document.getElementById('bulk-submit-btn').style.display = 'none';
+    document.getElementById('bulk-summary').textContent = '';
+
+    // 預設日期
+    var now = new Date();
+    setVal('bulk-start-date', fmtDateISO(now));
+    var end = new Date(now.getTime() + settings.defaultDays * 86400000);
+    setVal('bulk-end-date', fmtDateISO(end));
+    setVal('bulk-priority', 'normal');
+    setVal('bulk-sort-start', '10');
+
+    buildBulkTagCheckboxes();
+    buildBulkChannelCheckboxes();
+    setupBulkDropzone();
+    showModal('bulk-modal');
+  }
+
+  function closeBulkModal() {
+    hideModal('bulk-modal');
+    bulkItems = [];
+  }
+
+  function setupBulkDropzone() {
+    var dz = document.getElementById('bulk-dropzone');
+    var fi = document.getElementById('bulk-file-input');
+    if (!dz || !fi) return;
+
+    // 移除舊事件（重建）
+    var newDz = dz.cloneNode(true);
+    dz.parentNode.replaceChild(newDz, dz);
+    var newFi = newDz.querySelector('#bulk-file-input');
+
+    newDz.onclick = function () { newFi.click(); };
+
+    newDz.ondragover = function (e) { e.preventDefault(); newDz.classList.add('dragover'); };
+    newDz.ondragleave = function () { newDz.classList.remove('dragover'); };
+    newDz.ondrop = function (e) {
+      e.preventDefault();
+      newDz.classList.remove('dragover');
+      handleBulkFiles(e.dataTransfer.files);
+    };
+
+    newFi.onchange = function () {
+      if (this.files && this.files.length > 0) handleBulkFiles(this.files);
+      this.value = '';
+    };
+  }
+
+  function handleBulkFiles(fileList) {
+    var files = Array.prototype.slice.call(fileList);
+    var remaining = files.length;
+
+    files.forEach(function (file) {
+      if (!file.type.startsWith('image/')) { remaining--; return; }
+
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        var img = new Image();
+        img.onload = function () {
+          var detected = detectSize(img.width, img.height);
+          var title = cleanFilename(file.name);
+
+          bulkItems.push({
+            id: 'bulk_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+            file: file,
+            dataUrl: e.target.result,
+            title: title,
+            detectedSize: detected,
+            width: img.width,
+            height: img.height
+          });
+
+          remaining--;
+          if (remaining <= 0) {
+            renderBulkList();
+          }
+        };
+        img.onerror = function () { remaining--; if (remaining <= 0) renderBulkList(); };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function detectSize(w, h) {
+    // 比對最接近的尺寸
+    var sizes = SIZE_OPTIONS.map(function (opt) {
+      var parts = opt.value.split('x');
+      var sw = parseInt(parts[0]), sh = parseInt(parts[1]);
+      var diff = Math.abs(w - sw) + Math.abs(h - sh);
+      // 完全匹配或比例接近
+      var ratio = w / h;
+      var targetRatio = sw / sh;
+      var ratioDiff = Math.abs(ratio - targetRatio);
+      return { size: opt.value, diff: diff, ratioDiff: ratioDiff };
+    });
+
+    // 優先完全匹配
+    for (var i = 0; i < sizes.length; i++) {
+      if (sizes[i].diff === 0) return sizes[i].size;
+    }
+    // 其次比例最接近
+    sizes.sort(function (a, b) { return a.ratioDiff - b.ratioDiff; });
+    return sizes[0].size;
+  }
+
+  function cleanFilename(name) {
+    // 移除副檔名
+    var title = name.replace(/\.[^.]+$/, '');
+    // 移除常見尺寸後綴
+    title = title.replace(/[_-]?(1920x1080|1080x1920|800x1080|1080x1162|1920_1080|1080_1920|800_1080|1080_1162)/gi, '');
+    // 清理多餘的符號
+    title = title.replace(/[_-]+$/, '').replace(/^[_-]+/, '').trim();
+    return title || '未命名';
+  }
+
+  function renderBulkList() {
+    var container = document.getElementById('bulk-list');
+    if (!container) return;
+    container.innerHTML = '';
+
+    if (bulkItems.length === 0) {
+      document.getElementById('bulk-shared-settings').style.display = 'none';
+      document.getElementById('bulk-submit-btn').style.display = 'none';
+      document.getElementById('bulk-summary').textContent = '';
+      return;
+    }
+
+    // 顯示共用設定和上傳按鈕
+    document.getElementById('bulk-shared-settings').style.display = '';
+    document.getElementById('bulk-submit-btn').style.display = '';
+
+    // 統計
+    var sizeCount = {};
+    bulkItems.forEach(function (item) {
+      sizeCount[item.detectedSize] = (sizeCount[item.detectedSize] || 0) + 1;
+    });
+    var summary = bulkItems.length + ' 張圖片';
+    var parts = [];
+    Object.keys(sizeCount).forEach(function (s) {
+      var label = '';
+      for (var i = 0; i < SIZE_OPTIONS.length; i++) {
+        if (SIZE_OPTIONS[i].value === s) { label = SIZE_OPTIONS[i].label; break; }
+      }
+      parts.push(label + ' ×' + sizeCount[s]);
+    });
+    document.getElementById('bulk-summary').textContent = summary + '（' + parts.join('、') + '）';
+
+    // 同名合併提示：檢查有哪些可以合併為同一張圖卡的不同尺寸
+    var titleGroups = {};
+    bulkItems.forEach(function (item) {
+      if (!titleGroups[item.title]) titleGroups[item.title] = [];
+      titleGroups[item.title].push(item);
+    });
+
+    bulkItems.forEach(function (item) {
+      var el = document.createElement('div');
+      el.className = 'bulk-item';
+      el.setAttribute('data-bulk-id', item.id);
+
+      var sizeLabel = item.detectedSize;
+      for (var i = 0; i < SIZE_OPTIONS.length; i++) {
+        if (SIZE_OPTIONS[i].value === item.detectedSize) { sizeLabel = SIZE_OPTIONS[i].label; break; }
+      }
+
+      // 同名有多個 = 可合併
+      var group = titleGroups[item.title];
+      var mergeHint = (group && group.length > 1) ? ' <span style="color:var(--kt-green-light);font-size:10px">🔗 同名合併</span>' : '';
+
+      el.innerHTML =
+        '<img src="' + esc(item.dataUrl) + '">' +
+        '<input class="bulk-title" type="text" value="' + esc(item.title) + '" onchange="updateBulkTitle(\'' + item.id + '\', this.value)">' +
+        '<div class="bulk-size">' + sizeLabel + '<br><span style="font-size:10px;color:var(--text-muted)">' + item.width + '×' + item.height + '</span>' + mergeHint + '</div>' +
+        '<select style="width:120px;padding:4px 6px;background:var(--bg-card);border:1px solid var(--border-color);border-radius:6px;color:var(--text-primary);font-size:11px" onchange="updateBulkSize(\'' + item.id + '\', this.value)">' +
+          SIZE_OPTIONS.map(function (opt) {
+            return '<option value="' + opt.value + '"' + (opt.value === item.detectedSize ? ' selected' : '') + '>' + opt.label + '</option>';
+          }).join('') +
+        '</select>' +
+        '<button class="bulk-remove" onclick="removeBulkItem(\'' + item.id + '\')">&times;</button>';
+
+      container.appendChild(el);
+    });
+  }
+
+  function updateBulkTitle(id, title) {
+    for (var i = 0; i < bulkItems.length; i++) {
+      if (bulkItems[i].id === id) { bulkItems[i].title = title; break; }
+    }
+  }
+
+  function updateBulkSize(id, size) {
+    for (var i = 0; i < bulkItems.length; i++) {
+      if (bulkItems[i].id === id) { bulkItems[i].detectedSize = size; break; }
+    }
+    renderBulkList();
+  }
+
+  function removeBulkItem(id) {
+    bulkItems = bulkItems.filter(function (item) { return item.id !== id; });
+    renderBulkList();
+  }
+
+  function buildBulkTagCheckboxes() {
+    var container = document.getElementById('bulk-tag-checkboxes');
+    if (!container) return;
+    container.innerHTML = '';
+    allTags.forEach(function (tag) {
+      var chip = document.createElement('label');
+      chip.className = 'tag-chip';
+      chip.innerHTML = '<input type="checkbox" value="' + esc(tag) + '">' + esc(tag);
+      chip.onclick = function () {
+        var cb = chip.querySelector('input');
+        setTimeout(function () { chip.classList.toggle('selected', cb.checked); }, 0);
+      };
+      container.appendChild(chip);
+    });
+  }
+
+  function buildBulkChannelCheckboxes() {
+    var container = document.getElementById('bulk-channel-checkboxes');
+    if (!container) return;
+    container.innerHTML = '';
+    allChannels.forEach(function (ch) {
+      var chip = document.createElement('label');
+      chip.className = 'tag-chip';
+      chip.innerHTML = '<input type="checkbox" value="' + esc(ch.id) + '">' + esc(ch.name) + ' <span style="font-size:10px;color:var(--text-muted)">(' + ch.size + ')</span>';
+      chip.onclick = function () {
+        var cb = chip.querySelector('input');
+        setTimeout(function () { chip.classList.toggle('selected', cb.checked); }, 0);
+      };
+      container.appendChild(chip);
+    });
+  }
+
+  function executeBulkUpload() {
+    if (bulkItems.length === 0) { toast('請先選擇圖片', 'warning'); return; }
+
+    // 收集共用設定
+    var sharedTags = [];
+    document.querySelectorAll('#bulk-tag-checkboxes input:checked').forEach(function (cb) {
+      sharedTags.push(cb.value);
+    });
+    var sharedChannels = [];
+    document.querySelectorAll('#bulk-channel-checkboxes input:checked').forEach(function (cb) {
+      sharedChannels.push(cb.value);
+    });
+    var startDate = fromISO(getVal('bulk-start-date'));
+    var endDate = fromISO(getVal('bulk-end-date'));
+    var priority = getVal('bulk-priority') || 'normal';
+    var sortStart = parseInt(getVal('bulk-sort-start'), 10) || 10;
+
+    // 按標題分組（同名的合併為一張圖卡的不同尺寸 variant）
+    var groups = {};
+    var groupOrder = [];
+    bulkItems.forEach(function (item) {
+      var key = item.title;
+      if (!groups[key]) {
+        groups[key] = [];
+        groupOrder.push(key);
+      }
+      groups[key].push(item);
+    });
+
+    // 建立圖卡清單
+    var newCards = [];
+    groupOrder.forEach(function (title, idx) {
+      var items = groups[title];
+      var cardId = 'card_' + Date.now() + '_' + idx;
+      var card = {
+        id: cardId,
+        title: title,
+        tags: sharedTags.slice(),
+        channels: sharedChannels.slice(),
+        variants: {},
+        start_date: startDate,
+        end_date: endDate,
+        start_time: '00:00',
+        end_time: '23:59',
+        sort_order: sortStart + idx * 10,
+        priority: priority,
+        enabled: true,
+        note: '批次上傳',
+        _pending: items  // 暫存，上傳完移除
+      };
+      newCards.push(card);
+    });
+
+    toast('開始上傳 ' + bulkItems.length + ' 張圖片，建立 ' + newCards.length + ' 張圖卡...', 'success');
+    showLoading(true);
+
+    // 逐一上傳圖片，然後儲存 cards.json
+    bulkUploadSequential(newCards, 0, function () {
+      // 全部上傳完成，清除 _pending 並加入 allCards
+      newCards.forEach(function (card) {
+        delete card._pending;
+        allCards.push(card);
+      });
+
+      ghSaveJson('data/cards.json', allCards, '批次新增 ' + newCards.length + ' 張圖卡', function () {
+        showLoading(false);
+        closeBulkModal();
+        toast('✅ 批次上傳完成！已建立 ' + newCards.length + ' 張圖卡', 'success');
+        refreshAll();
+      }, function (err) {
+        showLoading(false);
+        toast('儲存 cards.json 失敗: ' + err, 'error');
+      });
+    });
+  }
+
+  function bulkUploadSequential(cards, cardIdx, allDone) {
+    if (cardIdx >= cards.length) { allDone(); return; }
+
+    var card = cards[cardIdx];
+    var items = card._pending || [];
+
+    bulkUploadItems(items, 0, card, function () {
+      bulkUploadSequential(cards, cardIdx + 1, allDone);
+    });
+  }
+
+  function bulkUploadItems(items, idx, card, done) {
+    if (idx >= items.length) { done(); return; }
+    var item = items[idx];
+    var ext = item.file.name.split('.').pop() || 'png';
+    var sizeKey = item.detectedSize;
+    var path = 'images/' + card.id + '_' + sizeKey.replace('x', '_') + '.' + ext;
+    var base64 = item.dataUrl.split(',')[1];
+
+    ghUploadFile(path, base64, '批次上傳 ' + card.title + ' (' + sizeKey + ')', function (url) {
+      card.variants[sizeKey] = url;
+      toast('📤 ' + card.title + ' (' + sizeKey + ') 上傳完成', 'success');
+      bulkUploadItems(items, idx + 1, card, done);
+    }, function (err) {
+      toast('❌ ' + card.title + ' (' + sizeKey + ') 上傳失敗', 'error');
+      bulkUploadItems(items, idx + 1, card, done);
+    });
+  }
+
+  // ============================================================
   // 全域曝露
   // ============================================================
   window.switchTab = switchTab;
@@ -1245,6 +1593,12 @@
   window.previewChannel = previewChannel;
   window.copyText = copyText;
   window.toast = toast;
+  window.openBulkUpload = openBulkUpload;
+  window.closeBulkModal = closeBulkModal;
+  window.executeBulkUpload = executeBulkUpload;
+  window.updateBulkTitle = updateBulkTitle;
+  window.updateBulkSize = updateBulkSize;
+  window.removeBulkItem = removeBulkItem;
 
   // ============================================================
   // 啟動
