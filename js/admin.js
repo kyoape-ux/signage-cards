@@ -63,10 +63,36 @@
   // 初始化
   // ============================================================
   function init() {
+    // URL hash 自動設定：index.html#token=xxx
+    autoSetupFromHash();
     fillSettingsForm();
     setupUpload();
     setupGroupAutoSize();
     loadCards();
+  }
+
+  function autoSetupFromHash() {
+    var hash = window.location.hash || '';
+    if (hash.indexOf('token=') < 0) return;
+
+    var params = {};
+    hash.replace('#', '').split('&').forEach(function (pair) {
+      var kv = pair.split('=');
+      if (kv.length === 2) params[decodeURIComponent(kv[0])] = decodeURIComponent(kv[1]);
+    });
+
+    if (params.token) {
+      settings.ghToken = params.token;
+      if (params.owner) settings.ghOwner = params.owner;
+      if (params.repo) settings.ghRepo = params.repo;
+      if (params.sheetId) settings.sheetId = params.sheetId;
+      saveSettingsToStorage();
+      // 移除 hash 避免 token 留在網址列
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+      setTimeout(function () {
+        toast('✅ 設定已自動完成！', 'success');
+      }, 500);
+    }
   }
 
   // ============================================================
