@@ -65,5 +65,28 @@
     "priority": "urgent",
     "enabled": true,
     "note": "插播-只播會議廳和大廳"
+  },
+  {
+    "id": "card_1776266827477_0",
+    "title": "歡迎圖卡-橫式滿版示意圖",
+    "tags": [
+      "歡迎"
+    ],
+    "channels": [
+      "ch_conference_L",
+      "ch_conference_R",
+      "ch_hall"
+    ],
+    "variants": {
+      "1920x1080": "https://kyoape-ux.github.io/signage-cards/images/card_1776266827477_0_1920_1080.png"
+    },
+    "start_date": "2026/04/15",
+    "end_date": "2026/07/14",
+    "start_time": "00:00",
+    "end_time": "23:59",
+    "sort_order": 10,
+    "priority": "normal",
+    "enabled": true,
+    "note": "批次上傳"
   }
 ]
