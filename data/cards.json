@@ -2,7 +2,9 @@
   {
     "id": "card_demo_001",
     "title": "四月衛教-糖尿病預防",
-    "tags": ["衛教"],
+    "tags": [
+      "衛教"
+    ],
     "channels": [],
     "variants": {
       "1920x1080": "https://picsum.photos/id/1015/1920/1080",
@@ -22,7 +24,9 @@
   {
     "id": "card_demo_002",
     "title": "新進醫師-王大明",
-    "tags": ["新進醫師"],
+    "tags": [
+      "新進醫師"
+    ],
     "channels": [],
     "variants": {
       "1920x1080": "https://picsum.photos/id/1025/1920/1080",
@@ -42,8 +46,14 @@
   {
     "id": "card_demo_003",
     "title": "歡迎OO學會蒞臨指導",
-    "tags": ["歡迎"],
-    "channels": ["ch_conference_L", "ch_conference_R", "ch_hall"],
+    "tags": [
+      "歡迎"
+    ],
+    "channels": [
+      "ch_conference_L",
+      "ch_conference_R",
+      "ch_hall"
+    ],
     "variants": {
       "1920x1080": "https://picsum.photos/id/1035/1920/1080"
     },
@@ -55,5 +65,27 @@
     "priority": "urgent",
     "enabled": true,
     "note": "插播-只播會議廳和大廳"
+  },
+  {
+    "id": "card_1776266185670",
+    "title": "新進醫師-王大明 (副本)",
+    "tags": [
+      "新進醫師"
+    ],
+    "channels": [],
+    "variants": {
+      "1920x1080": "https://picsum.photos/id/1025/1920/1080",
+      "1080x1920": "https://picsum.photos/id/1025/1080/1920",
+      "800x1080": "https://picsum.photos/id/1025/800/1080",
+      "1080x1162": "https://picsum.photos/id/1025/1080/1162"
+    },
+    "start_date": "2026/01/01",
+    "end_date": "2026/12/31",
+    "start_time": "00:00",
+    "end_time": "23:59",
+    "sort_order": 20,
+    "priority": "normal",
+    "enabled": true,
+    "note": "測試用新進醫師圖卡"
   }
 ]
