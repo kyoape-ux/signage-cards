@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- Android WebView 不裁切 viewport -->
+  <meta name="viewport" content="width=800, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>光田公播 — 右半版 800×1080</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/player.css">
+
+  <style>
+    /* 右半版：800×1080 */
+    html, body {
+      width: 800px;
+      height: 1080px;
+    }
+    #player-container {
+      width: 800px;
+      height: 1080px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="player-container" class="transition-fade">
+
+  <!-- 圖片層 A -->
+  <div id="slide-a" class="slide">
+    <img id="img-a" src="" alt="">
+  </div>
+
+  <!-- 圖片層 B -->
+  <div id="slide-b" class="slide">
+    <img id="img-b" src="" alt="">
+  </div>
+
+  <!-- 預設畫面（無圖卡時） -->
+  <div id="default-screen">
+    <div class="logo-wrap">
+      <img src="assets/kt-logo.png" alt="光田綜合醫院" onerror="this.style.display='none'">
+    </div>
+    <div class="brand-text">光田綜合醫院</div>
+  </div>
+
+  <!-- 載入指示器 -->
+  <div id="loading-indicator">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- 除錯資訊（debug=1 時顯示） -->
+  <div id="debug-info"></div>
+
+</div>
+
+<script>
+  // 右半版用於診間叫號螢幕右側圖卡區
+  // group 可透過 URL 參數切換不同診區：
+  // ?group=門診大內科全區 / ?group=門診大外科全區 / ?group=婦女整合門診
+  window.PLAYER_CONFIG = {
+    sheetId:    '1reiXhNRHZP5SB3CG2HlOffJe-SNjWzQaR_3qovkW8tQ',
+    group:      '門診大內科全區',
+    interval:   8,
+    transition: 'fade',
+    refresh:    60,
+    debug:      false
+  };
+</script>
+<script src="js/player.js"></script>
+
+</body>
+</html>
